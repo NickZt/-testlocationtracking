@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
 
-            TrackingService.bindService(TrackingService.class, this,  this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -147,9 +147,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     //                notification
                     startService(
                             new Intent(MainActivity.this, TrackingService.class));
-
+                    TrackingService.bindService(TrackingService.class, MainActivity.this, MainActivity.this);
                     Snackbar.make(view, "Service started", Snackbar.LENGTH_LONG)
                             .setAction("Stop", null).show();
+                    startService(
+                            new Intent(MainActivity.this, TrackingService.class));
+
                 }
             });
         }
@@ -158,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 tvlineTimer   = (TextView) findViewById(R.id.tvlineTimer );
         timer = new MyCounter(minTimeUpdateSeconds*1000, 1000);
         timer.start();
+        startService(
+                new Intent(MainActivity.this, MyIntentService.class));
         startLogging();
     }
 
@@ -183,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateServTpoint() {
+    private void updateServTpoint() throws IOException {
 
         List<TrackPoint> points = service.getPoints();
         tvlineServ.setText("Points List");
@@ -197,9 +202,10 @@ if (points.size()==99) {
     } catch (JSONException e) {
         e.printStackTrace();
     }
-    try (FileWriter file = new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+    FileWriter file = new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
             + getString(R.string.app_name) + "_" + String.valueOf(Calendar.getInstance().getTime().getTime())
-            + ".json")) {
+            + ".json");
+    try {
         try {
             file.append(obj.toString());
         } catch (IOException e) {
@@ -207,8 +213,8 @@ if (points.size()==99) {
         }
         file.close();
 
-    } catch (IOException e) {
-        e.printStackTrace();
+    } finally {
+        file.close();
     }
 }
     }
