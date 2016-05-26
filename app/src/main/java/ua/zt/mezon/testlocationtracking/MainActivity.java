@@ -20,6 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private List<TrackPoint> pointsGUI = new ArrayList<>();
     private TextView tvlineServ, tvTimer, tvlineTimer;
     protected CountDownTimer timer;
+    // Special for Gal
     static String xmlHeader = "<?xml version='1.0' encoding='Utf-8' standalone='yes' ?>";
     static String gpxTrackHeader = "<gpx xmlns=\"http://www.topografix.com/GPX/1/0\" version=\"1.0\" creator=\"org.yriarte.tracklogger\">\n<trk>\n<trkseg>\n";
     static String gpxTrackFooter = "\n</trkseg>\n</trk>\n</gpx>\n";
@@ -186,7 +190,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         for (TrackPoint point : points) {
             tvlineServ.append(Double.toString(point.getLatitude())+"Long>" + Double.toString( point.getLongitude()));
         }
+if (points.size()==99) {
+    JSONObject obj = new JSONObject();
+    try {
+        obj.put("ss",points);
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+    try (FileWriter file = new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+            + getString(R.string.app_name) + "_" + String.valueOf(Calendar.getInstance().getTime().getTime())
+            + ".json")) {
+        try {
+            file.append(obj.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        file.close();
 
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     }
     public String gpxTrackPoint(double lat, double lon, double ele, long time) {
         String trkpt = "<trkpt";
