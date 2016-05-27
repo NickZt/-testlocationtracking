@@ -1,0 +1,2 @@
+# Testlocationtracking
+Скелет GPS трекера.
