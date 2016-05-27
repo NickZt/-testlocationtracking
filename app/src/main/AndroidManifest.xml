@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ua.zt.mezon.testlocationtracking">
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -28,8 +28,10 @@
             android:exported="false">
         </service>
         -->
+
         <service
-            android:name=".MyIntentService"
+            android:name=".core.TrackingService"
+            android:enabled="true"
             android:exported="false"></service>
     </application>
 

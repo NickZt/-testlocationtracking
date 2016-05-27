@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.widget.Toast;
 
 import ua.zt.mezon.testlocationtracking.MainActivity;
 import ua.zt.mezon.testlocationtracking.R;
@@ -21,6 +22,8 @@ public class BaseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Toast.makeText(this, "Служба создана",
+                Toast.LENGTH_SHORT).show();
         Intent notificationIntent = new Intent(this, MainActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
@@ -38,7 +41,10 @@ public class BaseService extends Service {
     @Nullable
     @Override
     public IBinder onBind(final Intent intent) {
+        Toast.makeText(this, "Служба Bind",
+                Toast.LENGTH_SHORT).show();
         return new ServiceConnector.ServiceBinder<>(this);
+
     }
 
     @Override
